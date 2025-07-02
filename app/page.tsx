@@ -19,15 +19,14 @@ import {
   WalletDropdownDisconnect,
 } from "@coinbase/onchainkit/wallet";
 import { useEffect, useMemo, useState, useCallback } from "react";
-import { Button } from "./components/DemoComponents";
-import { Icon } from "./components/DemoComponents";
-import { Home } from "./components/DemoComponents";
-import { Features } from "./components/DemoComponents";
+import { Button, Icon } from "./components/DemoComponents";
+import { TipForm } from "./components/TipForm";
+import { TipHistory } from "./components/TipHistory";
 
 export default function App() {
   const { setFrameReady, isFrameReady, context } = useMiniKit();
   const [frameAdded, setFrameAdded] = useState(false);
-  const [activeTab, setActiveTab] = useState("home");
+  const [activeTab, setActiveTab] = useState("tip");
 
   const addFrame = useAddFrame();
   const openUrl = useOpenUrl();
@@ -42,6 +41,15 @@ export default function App() {
     const frameAdded = await addFrame();
     setFrameAdded(Boolean(frameAdded));
   }, [addFrame]);
+
+
+
+  const handleTipSuccess = useCallback((_txHash: string) => {
+    // Show success message and potentially switch to history tab
+    setActiveTab("history");
+  }, []);
+
+
 
   const saveFrameButton = useMemo(() => {
     if (context && !context.client.added) {
@@ -76,28 +84,74 @@ export default function App() {
         <header className="flex justify-between items-center mb-3 h-11">
           <div>
             <div className="flex items-center space-x-2">
-              <Wallet className="z-10">
-                <ConnectWallet>
-                  <Name className="text-inherit" />
-                </ConnectWallet>
-                <WalletDropdown>
-                  <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
-                    <Avatar />
-                    <Name />
-                    <Address />
-                    <EthBalance />
-                  </Identity>
-                  <WalletDropdownDisconnect />
-                </WalletDropdown>
-              </Wallet>
+              <div className="text-2xl">🎪</div>
+              <div>
+                <h1 className="text-lg font-bold text-[#1E3A8A]">EthCC TipFest</h1>
+                <p className="text-xs text-[var(--app-foreground-muted)]">Cannes 2025</p>
+              </div>
             </div>
           </div>
-          <div>{saveFrameButton}</div>
+          <div className="flex items-center space-x-2">
+            <Wallet className="z-10">
+              <ConnectWallet>
+                <Name className="text-inherit" />
+              </ConnectWallet>
+              <WalletDropdown>
+                <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
+                  <Avatar />
+                  <Name />
+                  <Address />
+                  <EthBalance />
+                </Identity>
+                <WalletDropdownDisconnect />
+              </WalletDropdown>
+            </Wallet>
+            {saveFrameButton}
+          </div>
         </header>
 
+        {/* Navigation Tabs */}
+        <nav className="flex space-x-1 mb-4 bg-[var(--app-gray)] p-1 rounded-lg">
+          <Button
+            variant={activeTab === "tip" ? "primary" : "ghost"}
+            size="sm"
+            onClick={() => setActiveTab("tip")}
+            className={`flex-1 ${
+              activeTab === "tip" 
+                ? "bg-[#1E3A8A] text-white" 
+                : "text-[var(--app-foreground-muted)]"
+            }`}
+          >
+            <Icon name="send" size="sm" className="mr-1" />
+            Tip
+          </Button>
+
+
+          <Button
+            variant={activeTab === "history" ? "primary" : "ghost"}
+            size="sm"
+            onClick={() => setActiveTab("history")}
+            className={`flex-1 ${
+              activeTab === "history" 
+                ? "bg-[#1E3A8A] text-white" 
+                : "text-[var(--app-foreground-muted)]"
+            }`}
+          >
+            <Icon name="history" size="sm" className="mr-1" />
+            History
+          </Button>
+        </nav>
+
         <main className="flex-1">
-          {activeTab === "home" && <Home setActiveTab={setActiveTab} />}
-          {activeTab === "features" && <Features setActiveTab={setActiveTab} />}
+          {activeTab === "tip" && (
+            <TipForm 
+              onSuccess={handleTipSuccess}
+            />
+          )}
+
+
+
+          {activeTab === "history" && <TipHistory />}
         </main>
 
         <footer className="mt-2 pt-4 flex justify-center">
@@ -107,7 +161,7 @@ export default function App() {
             className="text-[var(--ock-text-foreground-muted)] text-xs"
             onClick={() => openUrl("https://base.org/builders/minikit")}
           >
-            Built on Base with MiniKit
+            Built on Base with MiniKit 💙
           </Button>
         </footer>
       </div>
