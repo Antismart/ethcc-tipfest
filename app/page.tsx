@@ -4,6 +4,9 @@ import {
   useMiniKit,
   useAddFrame,
   useOpenUrl,
+  useClose,
+  useViewProfile,
+  useNotification,
 } from "@coinbase/onchainkit/minikit";
 import {
   Name,
@@ -30,6 +33,9 @@ export default function App() {
 
   const addFrame = useAddFrame();
   const openUrl = useOpenUrl();
+  const close = useClose();
+  const viewProfile = useViewProfile();
+  const sendNotification = useNotification();
 
   useEffect(() => {
     if (!isFrameReady) {
@@ -38,19 +44,40 @@ export default function App() {
   }, [setFrameReady, isFrameReady]);
 
   const handleAddFrame = useCallback(async () => {
-    const frameAdded = await addFrame();
-    setFrameAdded(Boolean(frameAdded));
+    const result = await addFrame();
+    if (result) {
+      console.log('Frame added:', result.url, result.token);
+      setFrameAdded(Boolean(result));
+    }
   }, [addFrame]);
 
 
+
+  const handleSendNotification = useCallback(async () => {
+    try {
+      await sendNotification({
+        title: 'Tip Sent Successfully! 🎉',
+        body: 'Your tip has been processed and sent to the recipient!'
+      });
+    } catch (error) {
+      console.error('Failed to send notification:', error);
+    }
+  }, [sendNotification]);
 
   const handleTipSuccess = useCallback((txHash: string) => {
     // Show success message and potentially switch to history tab
     console.log('Tip successful:', txHash);
     setActiveTab("history");
-  }, []);
+    
+    // Send notification on successful tip
+    handleSendNotification();
+  }, [handleSendNotification]);
 
 
+
+  const handleViewProfile = useCallback(() => {
+    viewProfile();
+  }, [viewProfile]);
 
   const saveFrameButton = useMemo(() => {
     if (context && !context.client.added) {
@@ -107,7 +134,37 @@ export default function App() {
                 <WalletDropdownDisconnect />
               </WalletDropdown>
             </Wallet>
-            {saveFrameButton}
+            <div className="flex items-center space-x-1">
+              {saveFrameButton}
+              {context?.client.added && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSendNotification}
+                  className="text-[var(--app-accent)] text-xs"
+                  icon={<Icon name="bell" size="sm" />}
+                >
+                  Notify
+                </Button>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleViewProfile}
+                className="text-[var(--app-accent)] text-xs"
+                icon={<Icon name="users" size="sm" />}
+              >
+                Profile
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={close}
+                className="text-[var(--app-accent)] text-xs"
+              >
+                ✕
+              </Button>
+            </div>
           </div>
         </header>
 

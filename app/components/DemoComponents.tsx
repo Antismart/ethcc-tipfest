@@ -180,7 +180,7 @@ export function Home({ setActiveTab }: HomeProps) {
 }
 
 type IconProps = {
-  name: "heart" | "star" | "check" | "plus" | "arrow-right" | "send" | "users" | "history" | "wallet" | "message" | "mic" | "loader" | "arrow-up" | "arrow-down";
+  name: "heart" | "star" | "check" | "plus" | "arrow-right" | "send" | "users" | "history" | "wallet" | "message" | "mic" | "loader" | "arrow-up" | "arrow-down" | "bell";
   size?: "sm" | "md" | "lg";
   className?: string;
 }
@@ -422,6 +422,22 @@ export function Icon({ name, size = "md", className = "" }: IconProps) {
         <title>Arrow Down</title>
         <line x1="12" y1="5" x2="12" y2="19" />
         <polyline points="19 12 12 19 5 12" />
+      </svg>
+    ),
+    bell: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <title>Bell</title>
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
       </svg>
     ),
   };
