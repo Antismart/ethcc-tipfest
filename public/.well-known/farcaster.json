@@ -1,0 +1,15 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjEyMzQ1LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4MTIzNDU2Nzg5YWJjZGVmIn0",
+    "payload": "eyJkb21haW4iOiJldGhjYy10aXBmZXN0LnZlcmNlbC5hcHAifQ",
+    "signature": "MHg0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWY"
+  },
+  "frame": {
+    "name": "EthCC TipFest",
+    "url": "https://ethcc-tipfest.vercel.app",
+    "iconUrl": "https://ethcc-tipfest.vercel.app/icon.png",
+    "splashImageUrl": "https://ethcc-tipfest.vercel.app/splash.png",
+    "splashBackgroundColor": "#1E3A8A",
+    "homeUrl": "https://ethcc-tipfest.vercel.app"
+  }
+}

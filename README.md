@@ -1,113 +1,146 @@
-# MiniKit Template
+# EthCC TipFest 🎪
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-onchain --mini`](), configured with:
+A Farcaster Frame-based app for EthCC 2025 attendees to send gas-free tips to speakers and organizers. Built for Base Builder Quest 7.
 
-- [MiniKit](https://docs.base.org/builderkits/minikit/overview)
-- [OnchainKit](https://www.base.org/builders/onchainkit)
-- [Tailwind CSS](https://tailwindcss.com)
-- [Next.js](https://nextjs.org/docs)
+## 🌟 Features
 
-## Getting Started
+- **Gas-free Tipping**: Send USDC or ETH tips without paying gas fees using Paymaster
+- **Real Farcaster Data**: Live speaker data from Neynar API with profiles and verification
+- **Smart Search**: Search EthCC speakers by name, username, or company
+- **Featured Speakers**: Curated list of EthCC 2025 speakers and organizers
+- **Smart Contract**: Deployed EthCCTipFest contract for secure tip handling
+- **MiniKit Framework**: Built with OnchainKit and MiniKit for smooth UX
+- **EthCC Theme**: Beautiful blue design inspired by EthCC 2025 in Cannes
 
-1. Install dependencies:
+## 🏗️ Built With
+
+- [Next.js](https://nextjs.org) - React framework
+- [MiniKit](https://docs.base.org/builderkits/minikit/overview) - Farcaster Frame SDK
+- [OnchainKit](https://www.base.org/builders/onchainkit) - Base blockchain toolkit
+- [Tailwind CSS](https://tailwindcss.com) - Styling
+- [Base Sepolia](https://sepolia.basescan.org) - Test network
+
+## 🚀 Getting Started
+
+1. **Install dependencies:**
 ```bash
 npm install
-# or
-yarn install
-# or
-pnpm install
-# or
-bun install
 ```
 
-2. Verify environment variables, these will be set up by the `npx create-onchain --mini` command:
-
-You can regenerate the FARCASTER Account Association environment variables by running `npx create-onchain --manifest` in your project directory.
-
-The environment variables enable the following features:
-
-- Frame metadata - Sets up the Frame Embed that will be shown when you cast your frame
-- Account association - Allows users to add your frame to their account, enables notifications
-- Redis API keys - Enable Webhooks and background notifications for your application by storing users notification details
-
+2. **Set up environment variables:**
 ```bash
-# Shared/OnchainKit variables
-NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME=
-NEXT_PUBLIC_URL=
-NEXT_PUBLIC_ICON_URL=
-NEXT_PUBLIC_ONCHAINKIT_API_KEY=
-
-# Frame metadata
-FARCASTER_HEADER=
-FARCASTER_PAYLOAD=
-FARCASTER_SIGNATURE=
-NEXT_PUBLIC_APP_ICON=
-NEXT_PUBLIC_APP_SUBTITLE=
-NEXT_PUBLIC_APP_DESCRIPTION=
-NEXT_PUBLIC_APP_SPLASH_IMAGE=
-NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR=
-NEXT_PUBLIC_APP_PRIMARY_CATEGORY=
-NEXT_PUBLIC_APP_HERO_IMAGE=
-NEXT_PUBLIC_APP_TAGLINE=
-NEXT_PUBLIC_APP_OG_TITLE=
-NEXT_PUBLIC_APP_OG_DESCRIPTION=
-NEXT_PUBLIC_APP_OG_IMAGE=
-
-# Redis config
-REDIS_URL=
-REDIS_TOKEN=
+cp .env.example .env.local
 ```
 
-3. Start the development server:
+Edit `.env.local` with your values:
+- Get OnchainKit API key from [Coinbase Developer Platform](https://portal.cdp.coinbase.com)
+- Get Neynar API key from [Neynar Dashboard](https://neynar.com) for Farcaster data
+- Update the URLs to match your deployment
+
+3. **Start development server:**
 ```bash
 npm run dev
 ```
 
-## Template Features
+4. **Open in Warpcast:**
+Visit `http://localhost:3000` in Warpcast mobile app or use the Frame validator.
 
-### Frame Configuration
-- `.well-known/farcaster.json` endpoint configured for Frame metadata and account association
-- Frame metadata automatically added to page headers in `layout.tsx`
+## 📱 How to Use
 
-### Background Notifications
-- Redis-backed notification system using Upstash
-- Ready-to-use notification endpoints in `api/notify` and `api/webhook`
-- Notification client utilities in `lib/notification-client.ts`
+1. **Connect Wallet**: Sign in with your Farcaster account via MiniKit
+2. **Browse Speakers**: Explore real EthCC 2025 speakers with live Farcaster data
+3. **Smart Search**: Search by name, username, or company to find recipients
+4. **Send Tip**: Choose USDC or ETH amount and add a thank you message
+5. **Gas-Free**: Transaction processed without gas fees using Paymaster
+6. **View History**: Track your sent and received tips with full details
 
-### Theming
-- Custom theme defined in `theme.css` with OnchainKit variables
-- Pixel font integration with Pixelify Sans
-- Dark/light mode support through OnchainKit
+## 🔧 Smart Contract
 
-### MiniKit Provider
-The app is wrapped with `MiniKitProvider` in `providers.tsx`, configured with:
-- OnchainKit integration
-- Access to Frames context
-- Sets up Wagmi Connectors
-- Sets up Frame SDK listeners
-- Applies Safe Area Insets
+**Contract Address (Base Sepolia):** `0xe8833B8e513826A1c2c22f0aD149c64a5871eC43`
 
-## Customization
+### Key Functions:
+- `sendTip(to, amount, token, message)` - Send a tip with message
+- `getTipsBySender(sender)` - Get tips sent by address
+- `getTipsByReceiver(receiver)` - Get tips received by address
+- `getTotalTips()` - Get total number of tips
 
-To get started building your own frame, follow these steps:
+## 🎨 Architecture
 
-1. Remove the DemoComponents:
-   - Delete `components/DemoComponents.tsx`
-   - Remove demo-related imports from `page.tsx`
+### Components:
+- **TipForm**: Main tipping interface with recipient selection and amount input
+- **SpeakerList**: Featured EthCC speakers and organizers
+- **TipHistory**: View sent and received tips with transaction details
+- **Smart Contract Integration**: Direct interaction with EthCCTipFest contract
 
-2. Start building your Frame:
-   - Modify `page.tsx` to create your Frame UI
-   - Update theme variables in `theme.css`
-   - Adjust MiniKit configuration in `providers.tsx`
+### Tech Stack:
+- **Frontend**: Next.js + React + TypeScript
+- **Blockchain**: Base Sepolia testnet
+- **Wallet**: MiniKit integration with Farcaster
+- **Styling**: Tailwind CSS with EthCC blue theme
+- **Framework**: MiniKit for Farcaster Frame functionality
 
-3. Add your frame to your account:
-   - Cast your frame to see it in action
-   - Share your frame with others to start building your community
+## 📦 Deployment
 
-## Learn More
+### Vercel (Recommended)
 
-- [MiniKit Documentation](https://docs.base.org/builderkits/minikit/overview)
-- [OnchainKit Documentation](https://docs.base.org/builderkits/onchainkit/getting-started)
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-# ethcc-tipfest
+1. **Deploy to Vercel:**
+```bash
+npm i -g vercel
+vercel
+```
+
+2. **Set Environment Variables:**
+In Vercel dashboard, add all variables from `.env.example`
+
+3. **Update URLs:**
+Replace localhost URLs with your Vercel deployment URL
+
+### Manual Deployment
+
+1. **Build the project:**
+```bash
+npm run build
+```
+
+2. **Start production server:**
+```bash
+npm start
+```
+
+## 🎯 Base Builder Quest 7
+
+This project is built for **Base Builder Quest 7** with the following requirements:
+
+✅ **MiniKit Integration**: Full Farcaster Frame support with wallet connection
+✅ **OnchainKit**: Complete integration with Base ecosystem tools  
+✅ **Smart Contract**: Custom EthCCTipFest contract for tipping functionality
+✅ **Paymaster**: Gas-free transactions for better UX
+✅ **Mobile Responsive**: Optimized for Warpcast mobile experience
+✅ **EthCC Theming**: Custom blue design for EthCC 2025
+
+## 🌊 Contributing
+
+This project is part of the EthCC 2025 ecosystem. Contributions welcome!
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+Built for EthCC 2025 and Base Builder Quest 7. Open source under MIT License.
+
+## 🏖️ EthCC 2025
+
+Join us in Cannes for EthCC 2025! Use this app to show appreciation to speakers and organizers who make the event amazing.
+
+**Event Details:**
+- 📅 July 8-11, 2025
+- 📍 Cannes, France
+- 🌐 [ethcc.io](https://ethcc.io)
+
+---
+
+Built with 💙 on Base | Powered by MiniKit | Made for EthCC 2025
