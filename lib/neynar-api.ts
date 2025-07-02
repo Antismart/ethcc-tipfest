@@ -101,7 +101,7 @@ export async function getUserByUsernameFromNeynar(username: string): Promise<Eth
 export async function getUserByUsername(username: string): Promise<EthCCSpeaker | null> {
   // This function is now just a placeholder since we removed static data
   // All user lookups should go through Neynar API
-  console.warn("Static fallback called - no static data available");
+  console.warn("Static fallback called - no static data available for:", username);
   return null;
 }
 

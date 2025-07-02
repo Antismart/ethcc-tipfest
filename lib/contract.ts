@@ -1,5 +1,5 @@
 export const ETHCC_TIPFEST_CONTRACT = {
-  address: "0xe8833B8e513826A1c2c22f0aD149c64a5871eC43" as const,
+  address: "0x29e00504dB1CF17E2381D60eBbC523e96e653866" as const,
   abi: [
     {
       "inputs": [
@@ -448,8 +448,8 @@ export const ETHCC_TIPFEST_CONTRACT = {
   ]
 } as const;
 
-// USDC contract address on Base Sepolia
-export const USDC_BASE_SEPOLIA = "0x036CbD53842c5426634e7929541eC2318f3dCF7e" as const;
+// USDC contract address on Base Mainnet
+export const USDC_BASE_MAINNET = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913" as const;
 
 // Helper function to convert USDC amount to wei (6 decimals)
 export function usdcToWei(amount: string): bigint {

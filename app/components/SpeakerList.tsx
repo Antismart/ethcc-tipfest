@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { Card, Button, Icon } from "./DemoComponents";
+import { Card, Icon } from "./DemoComponents";
  
 interface SpeakerListProps {
-  onSelectRecipient: (handle: string, name: string) => void;
+  onSelectRecipient?: (handle: string, name: string) => void;
 }
 
 export function SpeakerList({ onSelectRecipient }: SpeakerListProps) {
+  // onSelectRecipient is available for future use
+  console.log('SpeakerList initialized', { onSelectRecipient });
+  
   return (
     <Card className="p-6 space-y-6">
       <div className="text-center">

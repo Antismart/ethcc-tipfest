@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import Image from "next/image";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseEther } from "viem";
-import { ETHCC_TIPFEST_CONTRACT, USDC_BASE_SEPOLIA, usdcToWei } from "../../lib/contract";
+import { ETHCC_TIPFEST_CONTRACT, USDC_BASE_MAINNET, usdcToWei } from "../../lib/contract";
 import { getUserByUsernameFromNeynar, type EthCCSpeaker } from "../../lib/neynar-api";
 import { Card, Button, Icon } from "./DemoComponents";
 
@@ -158,7 +159,7 @@ export function TipForm({ onSuccess, initialRecipient }: TipFormProps) {
         ? usdcToWei(amount)
         : parseEther(amount);
 
-      const tokenAddress = tipType === "USDC" ? USDC_BASE_SEPOLIA : "0x0000000000000000000000000000000000000000";
+      const tokenAddress = tipType === "USDC" ? USDC_BASE_MAINNET : "0x0000000000000000000000000000000000000000";
 
       writeContract({
         ...ETHCC_TIPFEST_CONTRACT,
@@ -256,10 +257,12 @@ export function TipForm({ onSuccess, initialRecipient }: TipFormProps) {
               <div className="flex items-center space-x-3">
                 <div className="flex-shrink-0">
                   {selectedUser.pfp_url && selectedUser.pfp_url.startsWith('http') ? (
-                    <img
+                    <Image
                       src={selectedUser.pfp_url}
                       alt={selectedUser.display_name}
-                      className="w-8 h-8 rounded-full object-cover"
+                      width={32}
+                      height={32}
+                      className="rounded-full object-cover"
                     />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-[#1E3A8A] text-white flex items-center justify-center text-xs font-bold">
