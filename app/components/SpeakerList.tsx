@@ -2,9 +2,9 @@
 
 import { Card, Icon } from "./DemoComponents";
  
-type SpeakerListProps = object;
 
-export function SpeakerList({}: SpeakerListProps) {
+
+export function SpeakerList() {
   
   return (
     <Card className="p-6 space-y-6">

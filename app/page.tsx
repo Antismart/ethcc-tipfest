@@ -46,7 +46,6 @@ export default function App() {
 
   const handleTipSuccess = useCallback((txHash: string) => {
     // Show success message and potentially switch to history tab
-    console.log('Tip successful:', txHash);
     setActiveTab("history");
   }, []);
 
