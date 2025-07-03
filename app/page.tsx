@@ -4,8 +4,6 @@ import {
   useMiniKit,
   useAddFrame,
   useOpenUrl,
-  useClose,
-  useViewProfile,
   useNotification,
 } from "@coinbase/onchainkit/minikit";
 import {
@@ -33,8 +31,7 @@ export default function App() {
 
   const addFrame = useAddFrame();
   const openUrl = useOpenUrl();
-  const close = useClose();
-  const viewProfile = useViewProfile();
+
   const sendNotification = useNotification();
 
   useEffect(() => {
@@ -75,10 +72,6 @@ export default function App() {
 
 
 
-  const handleViewProfile = useCallback(() => {
-    viewProfile();
-  }, [viewProfile]);
-
   const saveFrameButton = useMemo(() => {
     if (context && !context.client.added) {
       return (
@@ -109,17 +102,17 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-screen font-sans text-[var(--app-foreground)] mini-app-theme from-[var(--app-background)] to-[var(--app-gray)]">
       <div className="w-full max-w-md mx-auto px-4 py-3">
-        <header className="flex justify-between items-center mb-3 h-11">
-          <div>
-            <div className="flex items-center space-x-2">
-              <div className="text-2xl">🎪</div>
-              <div>
-                <h1 className="text-lg font-bold text-[#1E3A8A]">EthCC TipFest</h1>
-                <p className="text-xs text-[var(--app-foreground-muted)]">Cannes 2025</p>
+        <header className="flex flex-row flex-nowrap justify-between items-center mb-3 h-14 w-full max-w-full overflow-x-auto">
+          <div className="flex-1 min-w-0 flex items-center">
+            <div className="flex items-center space-x-2 min-w-0">
+              <div className="text-2xl flex-shrink-0">🎪</div>
+              <div className="truncate">
+                <h1 className="text-lg font-bold text-[#1E3A8A] leading-tight truncate">EthCC TipFest</h1>
+                <p className="text-xs text-[var(--app-foreground-muted)] leading-none truncate">Cannes 2025</p>
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 flex-shrink-0 max-w-full min-w-0">
             <Wallet className="z-10">
               <ConnectWallet>
                 <Name className="text-inherit" />
@@ -134,37 +127,7 @@ export default function App() {
                 <WalletDropdownDisconnect />
               </WalletDropdown>
             </Wallet>
-            <div className="flex items-center space-x-1">
-              {saveFrameButton}
-              {context?.client.added && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleSendNotification}
-                  className="text-[var(--app-accent)] text-xs"
-                  icon={<Icon name="bell" size="sm" />}
-                >
-                  Notify
-                </Button>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleViewProfile}
-                className="text-[var(--app-accent)] text-xs"
-                icon={<Icon name="users" size="sm" />}
-              >
-                Profile
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={close}
-                className="text-[var(--app-accent)] text-xs"
-              >
-                ✕
-              </Button>
-            </div>
+           
           </div>
         </header>
 
