@@ -19,6 +19,7 @@ export interface EthCCSpeaker {
 
 
 
+// username param is used
 export async function getUserByUsernameFromNeynar(username: string): Promise<EthCCSpeaker | null> {
   const NEYNAR_API_KEY = process.env.NEXT_PUBLIC_NEYNAR_API_KEY;
   

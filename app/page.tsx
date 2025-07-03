@@ -4,7 +4,6 @@ import {
   useMiniKit,
   useAddFrame,
   useOpenUrl,
-  useNotification,
 } from "@coinbase/onchainkit/minikit";
 import {
   Name,
@@ -32,8 +31,6 @@ export default function App() {
   const addFrame = useAddFrame();
   const openUrl = useOpenUrl();
 
-  const sendNotification = useNotification();
-
   useEffect(() => {
     if (!isFrameReady) {
       setFrameReady();
@@ -41,34 +38,17 @@ export default function App() {
   }, [setFrameReady, isFrameReady]);
 
   const handleAddFrame = useCallback(async () => {
-    const result = await addFrame();
-    if (result) {
-      console.log('Frame added:', result.url, result.token);
-      setFrameAdded(Boolean(result));
-    }
+    const frameAdded = await addFrame();
+    setFrameAdded(Boolean(frameAdded));
   }, [addFrame]);
 
 
-
-  const handleSendNotification = useCallback(async () => {
-    try {
-      await sendNotification({
-        title: 'Tip Sent Successfully! 🎉',
-        body: 'Your tip has been processed and sent to the recipient!'
-      });
-    } catch (error) {
-      console.error('Failed to send notification:', error);
-    }
-  }, [sendNotification]);
 
   const handleTipSuccess = useCallback((txHash: string) => {
     // Show success message and potentially switch to history tab
     console.log('Tip successful:', txHash);
     setActiveTab("history");
-    
-    // Send notification on successful tip
-    handleSendNotification();
-  }, [handleSendNotification]);
+  }, []);
 
 
 
@@ -102,17 +82,17 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-screen font-sans text-[var(--app-foreground)] mini-app-theme from-[var(--app-background)] to-[var(--app-gray)]">
       <div className="w-full max-w-md mx-auto px-4 py-3">
-        <header className="flex flex-row flex-nowrap justify-between items-center mb-3 h-14 w-full max-w-full overflow-x-auto">
-          <div className="flex-1 min-w-0 flex items-center">
-            <div className="flex items-center space-x-2 min-w-0">
-              <div className="text-2xl flex-shrink-0">🎪</div>
-              <div className="truncate">
-                <h1 className="text-lg font-bold text-[#1E3A8A] leading-tight truncate">EthCC TipFest</h1>
-                <p className="text-xs text-[var(--app-foreground-muted)] leading-none truncate">Cannes 2025</p>
+        <header className="flex justify-between items-center mb-3 h-11">
+          <div>
+            <div className="flex items-center space-x-2">
+              <div className="text-2xl">🎪</div>
+              <div>
+                <h1 className="text-lg font-bold text-[#1E3A8A]">EthCC TipFest</h1>
+                <p className="text-xs text-[var(--app-foreground-muted)]">Cannes 2025</p>
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-1 flex-shrink-0 max-w-full min-w-0">
+          <div className="flex items-center space-x-2">
             <Wallet className="z-10">
               <ConnectWallet>
                 <Name className="text-inherit" />
@@ -127,7 +107,7 @@ export default function App() {
                 <WalletDropdownDisconnect />
               </WalletDropdown>
             </Wallet>
-           
+            {saveFrameButton}
           </div>
         </header>
 

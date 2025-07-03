@@ -2,13 +2,9 @@
 
 import { Card, Icon } from "./DemoComponents";
  
-interface SpeakerListProps {
-  onSelectRecipient?: (handle: string, name: string) => void;
-}
+type SpeakerListProps = object;
 
-export function SpeakerList({ onSelectRecipient }: SpeakerListProps) {
-  // onSelectRecipient is available for future use
-  console.log('SpeakerList initialized', { onSelectRecipient });
+export function SpeakerList({}: SpeakerListProps) {
   
   return (
     <Card className="p-6 space-y-6">
