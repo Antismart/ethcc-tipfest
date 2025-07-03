@@ -2,8 +2,8 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { parseEther } from "viem";
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from "wagmi";
+import { parseEther, erc20Abi } from "viem";
 import { ETHCC_TIPFEST_CONTRACT, USDC_BASE_MAINNET, usdcToWei } from "../../lib/contract";
 import { getUserByUsernameFromNeynar, type EthCCSpeaker } from "../../lib/neynar-api";
 import { Card, Button, Icon } from "./DemoComponents";
@@ -40,6 +40,7 @@ export function TipForm({ onSuccess, initialRecipient }: TipFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<EthCCSpeaker | null>(null);
   const [isValidating, setIsValidating] = useState(false);
+  const [needsApproval, setNeedsApproval] = useState(false);
 
   // Debounce the username input to avoid excessive API calls
   const debouncedUsername = useDebounce(recipientHandle, 500);
@@ -48,6 +49,24 @@ export function TipForm({ onSuccess, initialRecipient }: TipFormProps) {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash,
   });
+
+  // Check USDC allowance
+  const { data: allowance } = useReadContract({
+    address: USDC_BASE_MAINNET,
+    abi: erc20Abi,
+    functionName: 'allowance',
+    args: address ? [address, ETHCC_TIPFEST_CONTRACT.address] : undefined,
+  });
+
+  // Check if approval is needed for USDC
+  useEffect(() => {
+    if (tipType === "USDC" && address && allowance !== undefined) {
+      const tipAmountWei = usdcToWei(amount);
+      setNeedsApproval(allowance < tipAmountWei);
+    } else {
+      setNeedsApproval(false);
+    }
+  }, [tipType, amount, allowance, address]);
 
   // Update form when initialRecipient changes
   useEffect(() => {
@@ -130,6 +149,27 @@ export function TipForm({ onSuccess, initialRecipient }: TipFormProps) {
       return null;
     }
   }, [selectedUser]);
+
+  // Handle USDC approval
+  const handleApproval = useCallback(async () => {
+    if (!address) return;
+    
+    setIsLoading(true);
+    try {
+      const tipAmountWei = usdcToWei(amount);
+      
+      writeContract({
+        address: USDC_BASE_MAINNET,
+        abi: erc20Abi,
+        functionName: 'approve',
+        args: [ETHCC_TIPFEST_CONTRACT.address, tipAmountWei],
+      });
+    } catch (error) {
+      console.error("Error approving USDC:", error);
+      alert("Failed to approve USDC. Please try again.");
+      setIsLoading(false);
+    }
+  }, [address, amount, writeContract]);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -343,7 +383,7 @@ export function TipForm({ onSuccess, initialRecipient }: TipFormProps) {
           <input
             type="number"
             step="0.01"
-            min="0.01"
+            min="1.00"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             className="w-full px-3 py-2 border border-[var(--app-card-border)] rounded-lg bg-[var(--app-card-bg)] text-[var(--app-foreground)] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
@@ -365,21 +405,40 @@ export function TipForm({ onSuccess, initialRecipient }: TipFormProps) {
         </div>
 
         {/* Submit Button */}
-        <Button
-          type="submit"
-          size="lg"
-          className="w-full bg-[#1E3A8A] hover:bg-[#1E40AF] text-white"
-          disabled={isLoading || isPending || isConfirming || !address || (!selectedUser && !recipientAddress)}
-        >
-          {isLoading || isPending || isConfirming ? (
-            <>
-              <Icon name="loader" size="sm" className="animate-spin mr-2" />
-              {isPending ? "Confirming..." : isConfirming ? "Processing..." : "Sending..."}
-            </>
-          ) : (
-            "Send Tip 🚀"
-          )}
-        </Button>
+        {needsApproval && tipType === "USDC" ? (
+          <Button
+            type="button"
+            size="lg"
+            className="w-full bg-[#1E3A8A] hover:bg-[#1E40AF] text-white"
+            onClick={handleApproval}
+            disabled={isLoading || isPending || isConfirming || !address}
+          >
+            {isLoading || isPending || isConfirming ? (
+              <>
+                <Icon name="loader" size="sm" className="animate-spin mr-2" />
+                {isPending ? "Confirming..." : isConfirming ? "Processing..." : "Approving..."}
+              </>
+            ) : (
+              "Approve USDC 💰"
+            )}
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full bg-[#1E3A8A] hover:bg-[#1E40AF] text-white"
+            disabled={isLoading || isPending || isConfirming || !address || (!selectedUser && !recipientAddress)}
+          >
+            {isLoading || isPending || isConfirming ? (
+              <>
+                <Icon name="loader" size="sm" className="animate-spin mr-2" />
+                {isPending ? "Confirming..." : isConfirming ? "Processing..." : "Sending..."}
+              </>
+            ) : (
+              "Send Tip 🚀"
+            )}
+          </Button>
+        )}
 
         {!address && (
           <p className="text-xs text-center text-[var(--app-foreground-muted)]">
