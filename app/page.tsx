@@ -44,7 +44,7 @@ export default function App() {
 
 
 
-  const handleTipSuccess = useCallback((txHash: string) => {
+  const handleTipSuccess = useCallback(() => {
     // Show success message and potentially switch to history tab
     setActiveTab("history");
   }, []);
